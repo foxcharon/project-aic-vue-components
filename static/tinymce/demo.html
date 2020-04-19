@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+    <script type="text/javascript" src="tinymce.min.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.tinymce.min.js"></script>
+    <script>         
+        tinymce.init({
+            selector:'textarea#elm1',          //<textarea>中为编辑区域
+            theme: "modern",                  //主题
+            language: "zh_CN",                //语言 ，可自行下载中文
+            paste_data_images: true,
+            height: 300,
+            content_css: "css/content.css",
+            plugins: [                             //插件，可自行根据现实内容删除
+                 "advlist autolink lists charmap print preview hr anchor pagebreak spellchecker",
+                 "searchreplace wordcount visualblocks visualchars fullscreen insertdatetime  nonbreaking",
+                 "save table contextmenu directionality emoticons paste textcolor image paste"
+           ],
+           font_formats: 'Palatino Linotype=Palatino Linotype,Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats',          
+           toolbar: "insertfile undo redo | styleselect fontselect fontsizeselect| bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      | print preview fullpage | forecolor backcolor",                          //工具栏，可根据需求删除
+           style_formats: [                        //初始时提供的默认格式
+                {title: 'Bold text', inline: 'b'},
+                {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+                {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+                {title: 'start', inline: 'h1', classes: 'start'},
+                {title: 'Table styles'},
+                {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+            ],
+            style_formats_merge: true,
+            images_upload_handler: function (blobInfo, success, failure) {
+                var xhr, formData;
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', 'http://localhost/oasis_publish_test_php/index.php/upload/upImg');
+                xhr.onload = function() {
+                  var json;
+                  if (xhr.status < 200 || xhr.status >= 300) {
+                    failure('HTTP Error: ' + xhr.status);
+                    return;
+                  }
+                  json = JSON.parse(xhr.responseText);
+                  if (!json || typeof json.location != 'string') {
+                    failure('Invalid JSON: ' + xhr.responseText);
+                    return;
+                  }
+                  success(json.location);
+                };
+                formData = new FormData();
+                formData.append('file', blobInfo.blob());
+                xhr.send(formData);
+            }
+        });
+        
+        
+        window.onload = function () {
+          document.getElementById('submit').onclick = function () {
+            
+          }
+          console.log(tinymce.activeEditor.uploadImages)          
+        }
+    </script>
+    <style>
+        .main{
+            display: block;
+            width: 800px;
+            margin: 0 auto;
+        }        
+    </style>
+</head>
+<body>
+    <b>Title</b>
+    <br>
+    <div class="activityshow_box" style= "margin-top:40%;width: 100%;display:none;margin-let:15%;margin-right:15%;padding:0;margin:2px 0;">
+    </div>
+
+    
+    <div class="main">
+        <textarea id="elm1"><h1 class="start">The Slient Space.</h1></textarea>
+    </div>
+    <button id="submit">submit!!!</button>
+</body>
+<script>
+    
+</script>
+</html>
