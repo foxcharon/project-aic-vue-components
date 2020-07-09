@@ -2,7 +2,7 @@
   "name": "project-aic-vue-components",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "The_Slight_Space",
+  "author": "The_Slight_Space_",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
